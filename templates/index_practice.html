@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Record Button</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div id="record-button" style="text-align: center;">
+        <button id="record" onclick="toggleRecording()">Record</button>
+    </div>
+
+    <script>
+        let isRecording = false;
+        let mediaRecorder;
+        let chunks = [];
+
+        async function toggleRecording() {
+            if (!isRecording) {
+                await startRecording();
+                document.getElementById('record').innerText = 'Stop Recording';
+            } else {
+                stopRecording();
+                document.getElementById('record').innerText = 'Record';
+            }
+            isRecording = !isRecording;
+        }
+
+        async function startRecording() {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorder.ondataavailable = event => {
+                chunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'audio/wav' });
+                sendRecording(blob);
+                chunks = [];
+            };
+
+            mediaRecorder.start();
+        }
+
+        function stopRecording() {
+            mediaRecorder.stop();
+        }
+
+        async function sendRecording(blob) {
+            const formData = new FormData();
+            formData.append('audio_data', blob);
+            await fetch('/record', {
+                method: 'POST',
+                body: formData
+            });
+        }
+    </script>
+</body>
+</html>
