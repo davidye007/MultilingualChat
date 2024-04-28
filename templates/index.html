@@ -1,58 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
+
 <head>
-    <title>Speech Recorder</title>
+
+
+    <meta charset="UTF-8">
+    <title>Language Practice</title>
+    <link rel="stylesheet" type="text/css" href="/static/layout.css">
 </head>
+
 <body>
-    <h1>Speech Recorder</h1>
     <form id="record-form" method="post" action="/record">
         <label for="language">Select Language:</label>
         <select id="language" name="language">
-            <option value="english">English</option>
-            <option value="spanish">Spanish</option>
-            <!-- Add more languages as needed -->
+            <option value="en-US">English</option>
+            <option value="zh-CN">Chinese (China)</option>
+            <option value="zh-TW">Chinese (Taiwan)</option>
+            <option value="es-ES">Spanish (Spain)</option>
+            <option value="es-MX">Spanish (Mexico)</option>
+            <option value="fr-FR">French (France)</option>
+            <option value="fr-CA">French (Canada)</option>
         </select>
-        <br>
         <label for="age">Enter Age:</label>
-        <input type="text" id="age" name="age">
-        <br>
+        <input type="text" id="age" name="age" placeholder="Your age">
         <label for="level">Select Level:</label>
         <select id="level" name="level">
             <option value="beginner">Beginner</option>
             <option value="intermediate">Intermediate</option>
             <option value="advanced">Advanced</option>
         </select>
-        <br>
-        <button type="button" id="start-recording">Start Recording</button>
-        <button type="button" id="stop-recording">Stop Recording</button>
-        <br>
-        <audio controls id="audio-player"></audio>
+        <button type="submit">Submit</button>
     </form>
-
-    <script>
-        const startButton = document.getElementById('start-recording');
-        const stopButton = document.getElementById('stop-recording');
-        const audioPlayer = document.getElementById('audio-player');
-
-        startButton.addEventListener('click', () => {
-            // Logic to start recording
-            console.log('Recording started...');
-        });
-
-        stopButton.addEventListener('click', () => {
-            // Logic to stop recording
-            console.log('Recording stopped...');
-            fetch('/record', {
-                method: 'POST',
-                body: new FormData(document.getElementById('record-form'))
-            })
-            .then(response => response.json())
-            .then(data => {
-                audioPlayer.src = data.audio_file;
-                audioPlayer.play();
-            })
-            .catch(error => console.error('Error:', error));
-        });
-    </script>
 </body>
+
 </html>
