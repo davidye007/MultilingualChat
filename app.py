@@ -1,31 +1,23 @@
-from flask import Flask, render_template, request, jsonify
-import speech_recognition as sr
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route("/", methods=["GET"])
 def index():
-    return render_template('index.html')
+    # Simply show the form on GET request
+    return render_template("index.html")
 
-@app.route('/record', methods=['POST'])
+@app.route("/record", methods=["POST"])
 def record():
-    language = request.form['language']
-    age = request.form['age']
-    level = request.form['level']
+    language = request.form.get('language')
+    age = request.form.get('age')
+    level = request.form.get('level')
 
-    # Dummy implementation for recording speech
-    # Replace this with actual speech-to-text logic
-    recognizer = sr.Recognizer()
-    with sr.Microphone() as source:
-        print("Listening...")
-        audio = recognizer.listen(source)
+    # Here you can add code to process the recording or other logic
+    print(f"Language: {language}, Age: {age}, Level: {level}")
 
-    # Save the recorded speech to an MP3 file
-    audio_file = f"recordings/{language}_{age}_{level}.mp3"
-    with open(audio_file, "wb") as f:
-        f.write(audio.get_wav_data())
+    # Redirect back to the main page or to another route after processing
+    return redirect(url_for('index'))
 
-    return jsonify({'audio_file': audio_file})
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
